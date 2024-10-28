@@ -1,8 +1,10 @@
 import 'dart:async';
 
+
 import 'package:flutter/material.dart';
-import 'package:mi_chat_app/screens/auth/sign_in_page.dart';
-import 'package:mi_chat_app/utils/navigation/custom_navigation.dart';
+import 'package:mi_chat_app/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
+
 
 class SpalshScreen extends StatefulWidget {
   const SpalshScreen({super.key});
@@ -14,6 +16,7 @@ class SpalshScreen extends StatefulWidget {
 class _SpalshScreenState extends State<SpalshScreen> {
   @override
   void initState() {
+    super.initState();
     // Future.delayed(const Duration(seconds: 3), () {
     //   Navigator.push(context, MaterialPageRoute(builder: (context) {
     //     return const SpalshScreen();
@@ -21,9 +24,9 @@ class _SpalshScreenState extends State<SpalshScreen> {
     // });
 
     Timer(const Duration(seconds: 3), () {
-      CustomNavigation.nextPage(context, const SignInPage());
+      Provider.of<AuthProvider>(context, listen: false)
+          .listenToAuthState(context);
     });
-    super.initState();
   }
 
   @override
@@ -47,8 +50,6 @@ class _SpalshScreenState extends State<SpalshScreen> {
           ),
         ],
       )),
-
-      
     );
   }
 }

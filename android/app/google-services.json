@@ -12,7 +12,20 @@
           "package_name": "lk.mishan.michat"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "309256412948-hs491bkrrt9p6b7bhkil35tta4pghme5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lk.mishan.michat",
+            "certificate_hash": "d4847c01841167d3fc2736ec1eeeb8266354036b"
+          }
+        },
+        {
+          "client_id": "309256412948-tcfq7amgm6e882cmr1mjc8635o08k1me.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD1un4ryDqb52ti2kLYDOvJX8w62TuU5T0"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "309256412948-tcfq7amgm6e882cmr1mjc8635o08k1me.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "309256412948-s3gspp0u5salj1m6bolhavmhej3ivij6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "lk.mishan.michat"
+              }
+            }
+          ]
         }
       }
     }
