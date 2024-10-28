@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "309256412948",
+    "project_id": "mi-chat-2e92a",
+    "storage_bucket": "mi-chat-2e92a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:309256412948:android:183fc250720c46ad0d6c01",
+        "android_client_info": {
+          "package_name": "lk.mishan.michat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1un4ryDqb52ti2kLYDOvJX8w62TuU5T0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

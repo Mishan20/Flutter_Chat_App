@@ -1,4 +1,4 @@
-package com.example.mi_chat_app
+package lk.mishan.michat
 
 import io.flutter.embedding.android.FlutterActivity
 
