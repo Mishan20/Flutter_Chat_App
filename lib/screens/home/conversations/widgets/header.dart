@@ -31,9 +31,14 @@ class Header extends StatelessWidget {
                 Provider.of<AuthProvider>(context).user!.photoURL!,
               ),
             ),
-            IconButton(onPressed: () {
-              Provider.of<AuthProvider>(context, listen: false).signOut();
-            }, icon: const Icon(Icons.exit_to_app))
+            IconButton(
+                onPressed: () {
+                  Provider.of<AuthProvider>(context, listen: false).signOut();
+                },
+                icon: const Icon(
+                  Icons.exit_to_app,
+                  color: Colors.white,
+                ))
           ],
         ),
         const Divider(),

@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:mi_chat_app/controllers/users_controller.dart';
+import 'package:mi_chat_app/models/user_model.dart';
 import 'package:mi_chat_app/utils/navigation/custom_navigation.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import '../../chat/chat_screen.dart';
 
@@ -38,44 +42,67 @@ class _UsersScreenState extends State<UsersScreen> {
               color: Colors.grey.shade700,
             ),
             Expanded(
-              child: ListView.builder(
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          CustomNavigation.nextPage(
-                              context, const ChatScreen());
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.grey.shade800,
-                          ),
-                          child: ListTile(
-                            title: const Text(
-                              "Ishan Senanayaka",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                overflow: TextOverflow.ellipsis,
+              child: StreamBuilder<QuerySnapshot>(
+                  stream: UsersController().getAllUSers(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return const Center(child: Text("Something went wrong"));
+                    }
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    List<UserModel> uList = [];
+
+                    for (var user in snapshot.data!.docs) {
+                      UserModel u = UserModel.fromJson(
+                        user.data() as Map<String, dynamic>,
+                      );
+                      uList.add(u);
+                    }
+
+                    return ListView.builder(
+                        itemCount: uList.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                CustomNavigation.nextPage(
+                                    context, const ChatScreen());
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.grey.shade800,
+                                ),
+                                child: ListTile(
+                                  title: Text(
+                                    uList[index].name,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    uList[index].isOnline
+                                        ? "Online"
+                                        : timeago.format(DateTime.parse(
+                                            uList[index].lastSeen)),
+                                    style:
+                                        TextStyle(color: Colors.grey.shade500),
+                                  ),
+                                  leading: CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage: NetworkImage(
+                                      uList[index].image,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                            subtitle: Text(
-                              "Last seen at 10:00 AM",
-                              style: TextStyle(color: Colors.grey.shade500),
-                            ),
-                            leading: const CircleAvatar(
-                              radius: 30,
-                              backgroundImage: NetworkImage(
-                                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D",
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
+                          );
+                        });
                   }),
             ),
           ],
