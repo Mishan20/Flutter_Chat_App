@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:mi_chat_app/providers/user_provider.dart';
 import 'package:mi_chat_app/screens/home/conversations/widgets/conversation_list.dart';
 import 'package:mi_chat_app/screens/home/conversations/widgets/header.dart';
 import 'package:mi_chat_app/screens/home/users/users.dart';
 import 'package:mi_chat_app/utils/navigation/custom_navigation.dart';
+import 'package:provider/provider.dart';
 
 class ConversationScreen extends StatefulWidget {
   const ConversationScreen({super.key});
@@ -11,7 +14,33 @@ class ConversationScreen extends StatefulWidget {
   State<ConversationScreen> createState() => _ConversationScreenState();
 }
 
-class _ConversationScreenState extends State<ConversationScreen> {
+class _ConversationScreenState extends State<ConversationScreen>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    Logger().f(state);
+    if (state == AppLifecycleState.resumed) {
+      Provider.of<UserProvider>(context, listen: false)
+          .updateOnlineStatus(true, context);
+    } else {
+      Provider.of<UserProvider>(context, listen: false)
+          .updateOnlineStatus(false, context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

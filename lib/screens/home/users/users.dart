@@ -43,7 +43,7 @@ class _UsersScreenState extends State<UsersScreen> {
             ),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                  stream: UsersController().getAllUSers(),
+                  stream: UsersController().getAllUSers(context),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return const Center(child: Text("Something went wrong"));

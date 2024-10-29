@@ -33,7 +33,8 @@ class Header extends StatelessWidget {
             ),
             IconButton(
                 onPressed: () {
-                  Provider.of<AuthProvider>(context, listen: false).signOut();
+                  Provider.of<AuthProvider>(context, listen: false)
+                      .signOut(context);
                 },
                 icon: const Icon(
                   Icons.exit_to_app,

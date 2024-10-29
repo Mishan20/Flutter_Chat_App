@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mi_chat_app/firebase_options.dart';
 import 'package:mi_chat_app/providers/auth_provider.dart';
+import 'package:mi_chat_app/providers/user_provider.dart';
 import 'package:mi_chat_app/screens/spalsh%20screen/spalsh_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +15,9 @@ void main() async {
     providers: [
       ChangeNotifierProvider(
         create: (context) => AuthProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => UserProvider(),
       ),
     ],
     child: const MyApp(),
