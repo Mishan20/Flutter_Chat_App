@@ -1,9 +1,13 @@
 import 'package:chat_bubbles/bubbles/bubble_special_three.dart';
-import 'package:chat_bubbles/message_bars/message_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:mi_chat_app/models/user_model.dart';
+import 'package:mi_chat_app/providers/chat_provider.dart';
+import 'package:mi_chat_app/screens/chat/widgets/header.dart';
+import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  final UserModel? user;
+  const ChatScreen({super.key, this.user});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -13,124 +17,101 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.grey.shade900,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Row(
+      body: SafeArea(
+          child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
           children: [
-            const CircleAvatar(
-              radius: 18,
-              backgroundImage: NetworkImage(
-                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D",
-              ),
+            StreamBuilder(
+                stream:
+                    Provider.of<ChatProvider>(context).startListenToUserData(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return ChatHeader(user: null, userModel: widget.user);
+                  }
+                  if (snapshot.hasError) {
+                    return ChatHeader(user: null, userModel: widget.user);
+                  }
+                  UserModel? user = snapshot.data;
+                  return ChatHeader(user: user, userModel: widget.user);
+                }),
+            const Divider(
+              color: Colors.grey,
             ),
-            const SizedBox(width: 8),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: ListView.builder(
+                  itemCount: 1,
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 15),
+                          child: Align(
+                              alignment: index.isEven
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
+                              child: const Text("10:00 AM",
+                                  style: TextStyle(color: Colors.grey))),
+                        ),
+                        BubbleSpecialThree(
+                          text: 'Please try and give some feedback on it!',
+                          color: index.isEven
+                              ? const Color(0xFF1B97F3)
+                              : Colors.grey.shade600,
+                          delivered: true,
+                          seen: true,
+                          isSender: index.isEven,
+                          tail: false,
+                          textStyle: const TextStyle(
+                              color: Colors.white, fontSize: 16),
+                        ),
+                      ],
+                    );
+                  }),
+            ),
+            Container(
+              height: 70,
+              color: Colors.white,
+              child: Row(
                 children: [
-                  const Text(
-                    "Ishan Senanayaka",
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                    "Last seen at 10:00 AM",
-                    style: TextStyle(
-                      color: Colors.grey.shade500,
-                      fontSize: 12,
-                    ),
-                  ),
+                  Expanded(
+                      child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(25)),
+                        child: TextField(
+                          controller:
+                              Provider.of<ChatProvider>(context, listen: false)
+                                  .messageController,
+                          maxLines: 2,
+                          minLines: 1,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Message",
+                          ),
+                        )),
+                  )),
+                  IconButton(
+                      onPressed: () {
+                        Provider.of<ChatProvider>(context, listen: false)
+                            .startSendMessage(context);
+                      },
+                      icon: const Icon(
+                        Icons.send,
+                        color: Colors.blue,
+                      ))
                 ],
               ),
             ),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.video_call, color: Colors.white),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.call, color: Colors.white),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return Column(
-                    crossAxisAlignment: index.isEven
-                        ? CrossAxisAlignment.end
-                        : CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10.0, vertical: 5.0),
-                        child: Text(
-                          "10:00 AM",
-                          style: TextStyle(
-                              color: Colors.grey.shade500, fontSize: 12),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: BubbleSpecialThree(
-                          text: index.isEven
-                              ? "This is a message from me!"
-                              : "This is a message from the other person!",
-                          color: index.isEven
-                              ? Colors.teal.shade800
-                              : Colors.grey.shade800,
-                          isSender: index.isEven,
-                          textStyle: const TextStyle(
-                              color: Colors.white, fontSize: 16),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-            const Divider(color: Colors.grey),
-            MessageBar(
-              textFieldTextStyle: const TextStyle(color: Colors.white),
-              onSend: (_) => print(_),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.add, color: Colors.grey),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: const Icon(Icons.camera_alt, color: Colors.green),
-                  onPressed: () {},
-                ),
-                // IconButton(
-                //   icon: const Icon(Icons.photo, color: Colors.blue),
-                //   onPressed: () {},
-                // ),
-                // IconButton(
-                //   icon: const Icon(Icons.mic, color: Colors.red),
-                //   onPressed: () {},
-                // ),
-              ],
-            ),
-          ],
-        ),
-      ),
+      )),
     );
   }
 }
