@@ -126,8 +126,6 @@ class _ChatScreenState extends State<ChatScreen> {
                       onPressed: () {
                         Provider.of<ChatProvider>(context, listen: false)
                             .startSendMessage(context);
-                        Provider.of<ChatProvider>(context, listen: false)
-                            .clearMessageBox();
                       },
                       icon: const Icon(
                         Icons.send,

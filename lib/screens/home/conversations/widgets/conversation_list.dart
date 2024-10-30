@@ -25,61 +25,74 @@ class ConversationList extends StatelessWidget {
               return const Center(child: Text("Error"));
             }
             List<ConversationModel> conversations = snapshot.data!;
-            return ListView.builder(
-              itemCount: conversations.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Provider.of<ChatProvider>(context, listen: false)
-                          .setUser(conversations[index].user);
-                      CustomNavigation.nextPage(
-                          context,
-                          ChatScreen(
-                            user: conversations[index].user,
-                          ));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey.shade800,
-                      ),
-                      child: ListTile(
-                        title: Text(
-                          conversations[index].user.name,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
-                        subtitle: Text(
-                          conversations[index].lastMessage,
-                          style: TextStyle(color: Colors.grey.shade500),
-                        ),
-                        trailing: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(timeago.format(conversations[index].lastTime),
-                                style: TextStyle(
-                                    color: Colors.grey.shade400, fontSize: 12)),
-                            const Icon(
-                              Icons.done_all,
-                              color: Colors.blue,
-                              size: 16,
+            return conversations.isNotEmpty
+                ? ListView.builder(
+                    itemCount: conversations.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Provider.of<ChatProvider>(context, listen: false)
+                                .setUser(conversations[index].user);
+                            CustomNavigation.nextPage(
+                                context,
+                                ChatScreen(
+                                  user: conversations[index].user,
+                                ));
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey.shade800,
                             ),
-                          ],
-                        ),
-                        leading: CircleAvatar(
-                          radius: 30,
-                          backgroundImage: NetworkImage(
-                            conversations[index].user.image,
+                            child: ListTile(
+                              title: Text(
+                                conversations[index].user.name,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
+                              subtitle: Text(
+                                conversations[index].lastMessage,
+                                style: TextStyle(color: Colors.grey.shade500),
+                              ),
+                              trailing: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                      timeago.format(
+                                          conversations[index].lastTime),
+                                      style: TextStyle(
+                                          color: Colors.grey.shade400,
+                                          fontSize: 12)),
+                                  const Icon(
+                                    Icons.done_all,
+                                    color: Colors.blue,
+                                    size: 16,
+                                  ),
+                                ],
+                              ),
+                              leading: CircleAvatar(
+                                radius: 30,
+                                backgroundImage: NetworkImage(
+                                  conversations[index].user.image,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
+                      );
+                    },
+                  )
+                : const Center(
+                    child: Text(
+                    "No Conversations",
+                    style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ));
           }),
     );
   }

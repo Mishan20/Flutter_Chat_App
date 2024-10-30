@@ -4,6 +4,8 @@ import 'package:logger/logger.dart';
 import 'package:mi_chat_app/models/conversation_model.dart';
 import 'package:mi_chat_app/models/message_model.dart';
 import 'package:mi_chat_app/models/user_model.dart';
+import 'package:mi_chat_app/providers/chat_provider.dart';
+import 'package:provider/provider.dart';
 
 class ChatController {
   CollectionReference users = FirebaseFirestore.instance.collection('Users');
@@ -30,9 +32,11 @@ class ChatController {
         .doc(senderConModel.user.uid)
         .collection(recieverConModel.user.uid)
         .doc(messageID)
-        .set(messageModel.toJson()).then((value) {
-          Logger().f('Added Message To ${senderConModel.user.name}');
-        });
+        .set(messageModel.toJson())
+        .then((value) {
+      Provider.of<ChatProvider>(context, listen: false).clearMessageBox();
+      Logger().f('Added Message To ${senderConModel.user.name}');
+    });
 
     await msgCollection
         .doc(recieverConModel.user.uid)

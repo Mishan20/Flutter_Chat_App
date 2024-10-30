@@ -4,6 +4,7 @@ class UserModel {
   String uid;
   String lastSeen;
   bool isOnline;
+  String token;
 
   UserModel({
     required this.name,
@@ -11,6 +12,7 @@ class UserModel {
     required this.uid,
     required this.lastSeen,
     required this.isOnline,
+    this.token = "",
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class UserModel {
       uid: json['uid'],
       lastSeen: json['lastSeen'],
       isOnline: json['isOnline'],
+      token: json['token'] ?? "",
     );
   }
 
@@ -29,5 +32,6 @@ class UserModel {
         'uid': uid,
         'lastSeen': lastSeen,
         'isOnline': isOnline,
+        'token': token,
       };
 }
