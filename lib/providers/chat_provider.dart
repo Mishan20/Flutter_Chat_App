@@ -58,11 +58,22 @@ class ChatProvider extends ChangeNotifier {
           lastTime: DateTime.now());
 
       ChatController()
-          .sendMessage(senderConModel, recieverConModel, message, context)
-          .then((value) {
-        _messageController.clear();
-        notifyListeners();
-      });
+          .sendMessage(senderConModel, recieverConModel, message, context);
     }
   }
+  void clearMessageBox() {
+    _messageController.clear();
+    notifyListeners();
+  }
+
+  Stream<List<ConversationModel>> startFetchConversation(BuildContext context) {
+    String uid = Provider.of<my_auth_provider.AuthProvider>(context, listen: false).user!.uid;
+    return ChatController().getConversations(uid);
+  }
+
+  Stream<List<MessageModel>> getAllMessages(BuildContext context) {
+    String uid = Provider.of<my_auth_provider.AuthProvider>(context, listen: false).user!.uid;
+    return ChatController().getMessages(uid, _user!.uid);
+  }
 }
+

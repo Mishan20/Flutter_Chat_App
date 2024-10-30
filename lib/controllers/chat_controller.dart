@@ -62,6 +62,23 @@ class ChatController {
     });
   }
 
+  Stream<List<ConversationModel>> getConversations(String uid) {
+    List<ConversationModel> list = [];
+    return conCollection
+        .doc(uid)
+        .collection('List')
+        .orderBy('lastTime', descending: true)
+        .snapshots()
+        .map((event) {
+      list.clear();
+      for (var element in event.docs) {
+        ConversationModel conModel = ConversationModel.fromJson(element.data());
+        list.add(conModel);
+      }
+      return list;
+    });
+  }
+
   Stream<List<MessageModel>> getMessages(String myUid, String uid) {
     List<MessageModel> list = [];
     return msgCollection

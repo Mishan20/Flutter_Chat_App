@@ -1,9 +1,11 @@
 import 'package:chat_bubbles/bubbles/bubble_special_three.dart';
 import 'package:flutter/material.dart';
+import 'package:mi_chat_app/models/message_model.dart';
 import 'package:mi_chat_app/models/user_model.dart';
 import 'package:mi_chat_app/providers/chat_provider.dart';
 import 'package:mi_chat_app/screens/chat/widgets/header.dart';
 import 'package:provider/provider.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class ChatScreen extends StatefulWidget {
   final UserModel? user;
@@ -39,37 +41,60 @@ class _ChatScreenState extends State<ChatScreen> {
               color: Colors.grey,
             ),
             Expanded(
-              child: ListView.builder(
-                  itemCount: 1,
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20, right: 20, top: 15),
-                          child: Align(
-                              alignment: index.isEven
-                                  ? Alignment.centerRight
-                                  : Alignment.centerLeft,
-                              child: const Text("10:00 AM",
-                                  style: TextStyle(color: Colors.grey))),
-                        ),
-                        BubbleSpecialThree(
-                          text: 'Please try and give some feedback on it!',
-                          color: index.isEven
-                              ? const Color(0xFF1B97F3)
-                              : Colors.grey.shade600,
-                          delivered: true,
-                          seen: true,
-                          isSender: index.isEven,
-                          tail: false,
-                          textStyle: const TextStyle(
-                              color: Colors.white, fontSize: 16),
-                        ),
-                      ],
-                    );
+              child: StreamBuilder(
+                  stream: Provider.of<ChatProvider>(context, listen: false)
+                      .getAllMessages(context),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError) {
+                      return const Center(child: Text("Error"));
+                    }
+                    if (snapshot.hasData) {
+                      List<MessageModel> messages = snapshot.data!;
+                      return Consumer<ChatProvider>(
+                          builder: (context, value, child) {
+                        return ListView.builder(
+                            reverse: true,
+                            itemCount: messages.length,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 20, right: 20, top: 15),
+                                    child: Align(
+                                        alignment: widget.user!.uid !=
+                                                messages[index].uid
+                                            ? Alignment.centerRight
+                                            : Alignment.centerLeft,
+                                        child: Text(
+                                            timeago
+                                                .format(messages[index].time),
+                                            style: const TextStyle(
+                                                color: Colors.grey))),
+                                  ),
+                                  BubbleSpecialThree(
+                                    text: messages[index].message,
+                                    color:
+                                        widget.user!.uid != messages[index].uid
+                                            ? const Color(0xFF1B97F3)
+                                            : Colors.grey.shade600,
+                                    delivered: true,
+                                    seen: true,
+                                    isSender:
+                                        widget.user!.uid != messages[index].uid,
+                                    tail: true,
+                                    textStyle: const TextStyle(
+                                        color: Colors.white, fontSize: 16),
+                                  ),
+                                ],
+                              );
+                            });
+                      });
+                    }
+                    return const SizedBox();
                   }),
             ),
             Container(
@@ -101,6 +126,8 @@ class _ChatScreenState extends State<ChatScreen> {
                       onPressed: () {
                         Provider.of<ChatProvider>(context, listen: false)
                             .startSendMessage(context);
+                        Provider.of<ChatProvider>(context, listen: false)
+                            .clearMessageBox();
                       },
                       icon: const Icon(
                         Icons.send,
