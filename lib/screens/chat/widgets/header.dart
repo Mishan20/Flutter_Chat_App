@@ -12,43 +12,71 @@ class ChatHeader extends StatelessWidget {
   final UserModel? user;
   final UserModel? userModel;
 
+  String formatName(String name) {
+    return name.length > 10 ? '${name.substring(0, 10)}...' : name;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const BackButton(
-          color: Colors.black,
-        ),
-        CircleAvatar(
-          radius: 20,
-          backgroundImage:
-              NetworkImage(user != null ? user!.image : userModel!.image),
-        ),
-        const SizedBox(width: 10),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              user != null ? user!.name : userModel!.name,
-              style: TextStyle(
-                  color: Colors.grey.shade800,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
+    return Container(
+      color: Colors.black87,
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+      child: Row(
+        children: [
+          const BackButton(
+            color: Colors.white,
+          ),
+          CircleAvatar(
+            radius: 20,
+            backgroundImage: NetworkImage(user != null ? user!.image : userModel!.image),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  formatName(user != null ? user!.name : userModel!.name),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  user != null
+                      ? user!.isOnline
+                          ? "Online"
+                          : timeago.format(DateTime.parse(user!.lastSeen))
+                      : "Offline",
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
             ),
-            Text(
-              user != null
-                  ? user!.isOnline
-                      ? "Online"
-                      : timeago.format(DateTime.parse(user!.lastSeen))
-                  : "ofline",
-              style: TextStyle(
-                color: Colors.grey.shade500,
-                fontSize: 14,
-              ),
-            ),
-          ],
-        )
-      ],
+          ),
+          IconButton(
+            icon: const Icon(Icons.video_call, color: Colors.white),
+            onPressed: () {
+              // Add your video call function here
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.call, color: Colors.white),
+            onPressed: () {
+              // Add your voice call function here
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.more_vert, color: Colors.white),
+            onPressed: () {
+              // Add additional options function here
+            },
+          ),
+        ],
+      ),
     );
   }
 }

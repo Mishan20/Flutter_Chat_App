@@ -9,8 +9,6 @@ import 'package:mi_chat_app/providers/user_provider.dart';
 import 'package:mi_chat_app/screens/spalsh_screen/spalsh_screen.dart';
 import 'package:provider/provider.dart';
 
-
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -24,12 +22,12 @@ void main() async {
     announcement: false,
     badge: true,
     carPlay: false,
-    criticalAlert: false, 
+    criticalAlert: false,
     provisional: false,
     sound: true,
   );
-  Logger().f('User granted permission: ${settings.authorizationStatus}'); 
-  
+  Logger().f('User granted permission: ${settings.authorizationStatus}');
+
   // Set the background messaging handler early on, as a named top-level function
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
@@ -65,7 +63,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         useMaterial3: true,
       ),
-      home: const SpalshScreen(),
+      home: const SplashScreen(),
     );
   }
 }
