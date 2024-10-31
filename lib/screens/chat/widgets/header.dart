@@ -13,14 +13,14 @@ class ChatHeader extends StatelessWidget {
   final UserModel? userModel;
 
   String formatName(String name) {
-    return name.length > 10 ? '${name.substring(0, 10)}...' : name;
+    return name.length > 10 ? '${name.substring(0, 5)}...' : name;
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.black87,
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 5.0),
       child: Row(
         children: [
           const BackButton(
@@ -28,9 +28,10 @@ class ChatHeader extends StatelessWidget {
           ),
           CircleAvatar(
             radius: 20,
-            backgroundImage: NetworkImage(user != null ? user!.image : userModel!.image),
+            backgroundImage:
+                NetworkImage(user != null ? user!.image : userModel!.image),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 5),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
