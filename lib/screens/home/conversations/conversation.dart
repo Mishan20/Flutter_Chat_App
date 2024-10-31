@@ -23,7 +23,7 @@ class _ConversationScreenState extends State<ConversationScreen>
     WidgetsBinding.instance.addObserver(this);
     NotificationController().updateToken();
     NotificationController().handleForeground();
-    NotificationController().setupInteractedMessage();
+    NotificationController().setupInteractedMessage(context);
   }
 
   @override

@@ -5,11 +5,13 @@ class ConversationModel {
   UserModel user;
   String lastMessage;
   DateTime lastTime;
+  UserModel sendBy;
 
   ConversationModel({
     required this.user,
     required this.lastMessage,
     required this.lastTime,
+    required this.sendBy,
   });
 
   factory ConversationModel.fromJson(Map<String, dynamic> json) {
@@ -17,6 +19,7 @@ class ConversationModel {
       user: UserModel.fromJson(json['user'] as Map<String, dynamic>),
       lastMessage: json['lastMessage'],
       lastTime: (json['lastTime'] as Timestamp).toDate(),
+      sendBy: UserModel.fromJson(json['sendBy'] as Map<String, dynamic>),
     );
   }
 
@@ -25,6 +28,7 @@ class ConversationModel {
       'user': user.toJson(),
       'lastMessage': lastMessage,
       'lastTime': lastTime,
+      'sendBy': sendBy.toJson(),
     };
   }
 }

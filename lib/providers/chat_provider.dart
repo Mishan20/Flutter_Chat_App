@@ -50,30 +50,40 @@ class ChatProvider extends ChangeNotifier {
       ConversationModel senderConModel = ConversationModel(
           user: _user!,
           lastMessage: _messageController.text,
-          lastTime: DateTime.now());
+          lastTime: DateTime.now(),
+          sendBy: _me!,
+          );
 
       ConversationModel recieverConModel = ConversationModel(
           user: _me!,
           lastMessage: _messageController.text,
-          lastTime: DateTime.now());
+          lastTime: DateTime.now(),
+          sendBy: _me!,
+          );
 
       ChatController()
           .sendMessage(senderConModel, recieverConModel, message, context);
     }
   }
+
   void clearMessageBox() {
     _messageController.clear();
     notifyListeners();
   }
 
   Stream<List<ConversationModel>> startFetchConversation(BuildContext context) {
-    String uid = Provider.of<my_auth_provider.AuthProvider>(context, listen: false).user!.uid;
+    String uid =
+        Provider.of<my_auth_provider.AuthProvider>(context, listen: false)
+            .user!
+            .uid;
     return ChatController().getConversations(uid);
   }
 
   Stream<List<MessageModel>> getAllMessages(BuildContext context) {
-    String uid = Provider.of<my_auth_provider.AuthProvider>(context, listen: false).user!.uid;
+    String uid =
+        Provider.of<my_auth_provider.AuthProvider>(context, listen: false)
+            .user!
+            .uid;
     return ChatController().getMessages(uid, _user!.uid);
   }
 }
-
