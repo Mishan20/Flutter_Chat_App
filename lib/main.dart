@@ -27,8 +27,6 @@ void main() async {
     sound: true,
   );
   Logger().f('User granted permission: ${settings.authorizationStatus}');
-
-  // Set the background messaging handler early on, as a named top-level function
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   runApp(MultiProvider(
